@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudieHub demo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-name">StudieHub</div>
+          <div class="brand-sub">Demo, offline prototype</div>
+        </div>
+      </div>
+
+      <div class="status-pill" id="statusPill" role="button" tabindex="0" aria-label="Bytt status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">Offline</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="grid">
+        <div class="card">
+          <div class="card-head">
+            <h2>Profil og fag</h2>
+            <p>Ser ekte ut, men er offline i denne demoen.</p>
+          </div>
+
+          <div class="form">
+            <label class="field">
+              <span>Brukernavn</span>
+              <input id="username" type="text" placeholder="Skriv inn brukernavn" autocomplete="off" />
+            </label>
+
+            <label class="field">
+              <span>Velg fag</span>
+              <div class="chips" id="subjectChips" aria-label="Fagvalg">
+                <!-- fylles av JS -->
+              </div>
+            </label>
+
+            <div class="mini">
+              <div class="mini-title">Match</div>
+              <div class="mini-text" id="matchText">Velg minst ett fag for å se forslag.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Arbeidsøkt</h2>
+            <p>Sett sluttid eller varighet. Prosent og påminnelser fungerer.</p>
+          </div>
+
+          <div class="session">
+            <div class="mode-row" role="tablist" aria-label="Øktmodus">
+              <button class="tab active" id="tabUntil" type="button">Til klokkeslett</button>
+              <button class="tab" id="tabDuration" type="button">Varighet</button>
+            </div>
+
+            <div class="row" id="modeUntil">
+              <label class="field">
+                <span>Sluttid</span>
+                <input id="endTime" type="time" />
+              </label>
+              <label class="field">
+                <span>Pausemønster</span>
+                <select id="breakPreset">
+                  <option value="50|10">50 min jobb, 10 min pause</option>
+                  <option value="25|5">25 min jobb, 5 min pause</option>
+                  <option value="90|15">90 min jobb, 15 min pause</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="row hidden" id="modeDuration">
+              <label class="field">
+                <span>Varighet</span>
+                <input id="durationMinutes" type="number" min="5" max="600" value="90" />
+              </label>
+              <label class="field">
+                <span>Pausemønster</span>
+                <select id="breakPreset2">
+                  <option value="50|10">50 min jobb, 10 min pause</option>
+                  <option value="25|5">25 min jobb, 5 min pause</option>
+                  <option value="90|15">90 min jobb, 15 min pause</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="controls">
+              <button class="btn primary" id="startBtn" type="button">Start økt</button>
+              <button class="btn" id="pauseBtn" type="button" disabled>Pause</button>
+              <button class="btn" id="resumeBtn" type="button" disabled>Fortsett</button>
+              <button class="btn ghost" id="resetBtn" type="button" disabled>Nullstill</button>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div class="metric-label">Tid igjen</div>
+                <div class="metric-value" id="timeLeft">00:00:00</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Prosent igjen</div>
+                <div class="metric-value" id="pctLeft">0%</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Slutt</div>
+                <div class="metric-value" id="endAt">–</div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <div class="bar">
+                <div class="fill" id="progressFill" style="width: 0%"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="progressCaption">Klar når du er.</span>
+                <span class="subtle" id="elapsedCaption">0 min brukt</span>
+              </div>
+            </div>
+
+            <div class="nudge" id="nudge" aria-live="polite">
+              <div class="nudge-title" id="nudgeTitle">Fokus tips</div>
+              <div class="nudge-text" id="nudgeText">
+                Start en økt for å få smarte påminnelser underveis.
+              </div>
+              <div class="nudge-foot" id="nudgeFoot">Kilder: vises under.</div>
+            </div>
+
+            <details class="sources">
+              <summary>Kilder brukt i tipsene</summary>
+              <ul>
+                <li>NIOSH: Work Rest Schedules and Fatigue</li>
+                <li>American Psychological Association: break taking and performance</li>
+                <li>University of Illinois: brief diversions improve focus (vigilance)</li>
+                <li>Pomodoro teknikk: intervallbasert arbeid, praktisk ramme</li>
+              </ul>
+              <p class="subtle">
+                Dette er en demo og ikke medisinske råd. Vi kan senere lenke til konkrete publikasjoner i en live versjon.
+              </p>
+            </details>
+          </div>
+        </div>
+
+        <div class="card span2">
+          <div class="card-head">
+            <h2>Chat, demo</h2>
+            <p>UI klar for realtime chat. I denne demoen lagres meldinger lokalt.</p>
+          </div>
+
+          <div class="chat">
+            <aside class="chat-list" aria-label="Samtaler">
+              <div class="search">
+                <input id="chatSearch" type="text" placeholder="Søk" autocomplete="off" />
+              </div>
+              <div class="people" id="peopleList"></div>
+            </aside>
+
+            <section class="chat-pane">
+              <div class="chat-head">
+                <div class="chat-peer">
+                  <div class="avatar" id="peerAvatar" aria-hidden="true"></div>
+                  <div>
+                    <div class="peer-name" id="peerName">Velg en person</div>
+                    <div class="peer-sub" id="peerSub">Fag og status vises her</div>
+                  </div>
+                </div>
+                <div class="hint">Backend kommer senere</div>
+              </div>
+
+              <div class="messages" id="messages"></div>
+
+              <form class="composer" id="composer">
+                <input id="messageInput" type="text" placeholder="Skriv en melding" autocomplete="off" disabled />
+                <button class="btn primary" id="sendBtn" type="submit" disabled>Send</button>
+              </form>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="foot-left">StudieHub demo. Offline og kjører uten server.</div>
+        <div class="foot-right">Neste steg: realtime, kontoer, matching, grupper, og statistikk.</div>
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
